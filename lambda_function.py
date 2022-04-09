@@ -11,6 +11,9 @@ def lambda_handler(event, context):
     logging.info(event)
     try:
         s3.Bucket(BUCKET_NAME).download_file(KEY,'/tmp/hello_local.txt')
+        temp_file='/tmp/hello_local.txt'
+        file = open(temp_file, "r")
+
     except botocore.exceptions.ClientError as e:
         if e.response['Error']['Code'] == '404':
            logging.error("the object doesnot exist")
@@ -19,5 +22,5 @@ def lambda_handler(event, context):
 # TODO implement
     return {
             'statusCode': 200,
-            'body': json.dumps('Hello from Lambda!')
+            'body': file.read()
     }
